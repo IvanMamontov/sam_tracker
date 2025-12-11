@@ -9,8 +9,8 @@ cd "$THIS_DIR"
 
 PYTHON=${PYTHON:-python3}
 VENV_DIR=${VENV_DIR:-.venv}
-CHECKPOINT_DIR=${CHECKPOINT_DIR:-"$THIS_DIR/checkpoints"}
-SAM2_REPO_DIR=${SAM2_REPO_DIR:-"$THIS_DIR/segment-anything-2"}
+SAM2_REPO_DIR=${SAM2_REPO_DIR:-"$THIS_DIR/sam2_repo"}
+CHECKPOINT_DIR=${CHECKPOINT_DIR:-"$SAM2_REPO_DIR/checkpoints"}
 
 # Official public checkpoint base URL (Meta)
 BASE_URL="https://dl.fbaipublicfiles.com/segment_anything_2/072824/"
