@@ -10,9 +10,15 @@ from roi_tracker import ROITracker
 from sam2_utils import load_sam2_local
 
 app = FastAPI()
-
 sam2_predictor = load_sam2_local(predictor_type="video", model_size="large")
 roi_tracker = ROITracker(sam2_predictor)
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "ok",
+        "sam2_loaded": sam2_predictor is not None
+    }
 
 @app.post("/track")
 async def track(

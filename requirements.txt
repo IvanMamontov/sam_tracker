@@ -3,4 +3,4 @@ opencv-python
 torch
 runpod
 pillow
-gunicorn
+uvicorn

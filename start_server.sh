@@ -19,18 +19,17 @@ if [ -d ".venv" ]; then
 fi
 
 # ------------------------------
-# Start Gunicorn
+# Start Uvicorn
 # ------------------------------
-echo "→ Starting Gunicorn:"
+echo "→ Starting Uvicorn:"
 echo "    Module:  $APP_MODULE"
 echo "    Host:    $HOST"
 echo "    Port:    $PORT"
 echo "    Workers: $WORKERS"
 echo "    LogLevel:$LOG_LEVEL"
 
-exec gunicorn "$APP_MODULE" \
-  --bind "$HOST:$PORT" \
-  --workers "$WORKERS" \
+exec uvicorn "$APP_MODULE" \
+  --host "$HOST" \
+  --port "$PORT" \
   --log-level "$LOG_LEVEL" \
-  --timeout 120 \
-  --preload
+  --workers "$WORKERS"

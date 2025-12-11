@@ -12,9 +12,6 @@ VENV_DIR=${VENV_DIR:-.venv}
 SAM2_REPO_DIR=${SAM2_REPO_DIR:-"$THIS_DIR/sam2_repo"}
 CHECKPOINT_DIR=${CHECKPOINT_DIR:-"$SAM2_REPO_DIR/checkpoints"}
 
-# Official public checkpoint base URL (Meta)
-BASE_URL="https://dl.fbaipublicfiles.com/segment_anything_2/072824/"
-
 # --------- 1. Create / activate venv ---------
 if [ ! -d "$VENV_DIR" ]; then
   echo "➡ Creating virtualenv in $VENV_DIR"
@@ -64,9 +61,10 @@ echo "➡ Installing SAM2 in editable mode"
 pip install -e "$SAM2_REPO_DIR"
 
 # --------- 4. Download SAM2 checkpoints ---------
-if [ -x "$SAM2_REPO_DIR/checkpoints/download_ckpts.sh" ]; then
+if [ -x "$CHECKPOINT_DIR/download_ckpts.sh" ]; then
   echo "➡ Running official checkpoint downloader"
-  bash "$SAM2_REPO_DIR/checkpoints/download_ckpts.sh"
+  cd "$CHECKPOINT_DIR"
+  bash "$CHECKPOINT_DIR/download_ckpts.sh"
 else
   echo "❌ checkpoints/download_ckpts.sh not found or not executable"
   exit 1

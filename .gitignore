@@ -1,2 +1,4 @@
 .idea/
 sam2_repo/
+.DS_Store
+__pycache__/
