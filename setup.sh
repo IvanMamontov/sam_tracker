@@ -37,12 +37,27 @@ else
   echo "⚠️  No requirements.txt found in $THIS_DIR, skipping"
 fi
 
-# --------- 3. Clone & install SAM2 repo ---------
-if [ ! -d "$SAM2_REPO_DIR" ]; then
+# --------- 3. Clone / update & install SAM2 repo ---------
+if [ ! -d "$SAM2_REPO_DIR/.git" ]; then
   echo "➡ Cloning SAM2 repo into $SAM2_REPO_DIR"
+  rm -rf "$SAM2_REPO_DIR" 2>/dev/null || true
   git clone https://github.com/facebookresearch/segment-anything-2.git "$SAM2_REPO_DIR"
 else
   echo "✓ SAM2 repo already present: $SAM2_REPO_DIR"
+  echo "➡ Updating SAM2 repo (git fetch/pull)"
+  git -C "$SAM2_REPO_DIR" fetch --all --tags
+  if [ -n "${SAM2_REV:-}" ]; then
+    echo "➡ Checking out SAM2 revision: $SAM2_REV"
+    git -C "$SAM2_REPO_DIR" checkout "$SAM2_REV"
+  else
+    git -C "$SAM2_REPO_DIR" pull --ff-only || echo "⚠️  SAM2 repo pull failed, continuing with existing checkout"
+  fi
+fi
+
+# Always (re)install SAM2 requirements if present
+if [ -f "$SAM2_REPO_DIR/requirements.txt" ]; then
+  echo "➡ Installing SAM2 requirements"
+  pip install -r "$SAM2_REPO_DIR/requirements.txt"
 fi
 
 echo "➡ Installing SAM2 in editable mode"
