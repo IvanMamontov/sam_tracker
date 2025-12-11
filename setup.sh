@@ -64,26 +64,13 @@ echo "➡ Installing SAM2 in editable mode"
 pip install -e "$SAM2_REPO_DIR"
 
 # --------- 4. Download SAM2 checkpoints ---------
-mkdir -p "$CHECKPOINT_DIR"
-
-download_ckpt() {
-  local fname="$1"
-  local url="${BASE_URL}${fname}"
-
-  if [ -f "$CHECKPOINT_DIR/$fname" ]; then
-    echo "✓ $fname already exists, skipping"
-  else
-    echo "⬇ Downloading $fname"
-    wget -q --show-progress -O "$CHECKPOINT_DIR/$fname" "$url" \
-      || { echo "❌ Failed to download $fname from $url"; exit 1; }
-  fi
-}
-
-echo "➡ Downloading SAM2 checkpoints into $CHECKPOINT_DIR"
-download_ckpt "sam2_hiera_tiny.pt"
-download_ckpt "sam2_hiera_small.pt"
-download_ckpt "sam2_hiera_base_plus.pt"
-download_ckpt "sam2_hiera_large.pt"
+if [ -x "$SAM2_REPO_DIR/checkpoints/download_ckpts.sh" ]; then
+  echo "➡ Running official checkpoint downloader"
+  bash "$SAM2_REPO_DIR/checkpoints/download_ckpts.sh"
+else
+  echo "❌ checkpoints/download_ckpts.sh not found or not executable"
+  exit 1
+fi
 
 echo
 echo "✅ SAM2 setup complete!"
