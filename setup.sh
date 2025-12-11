@@ -75,7 +75,3 @@ echo "✅ SAM2 setup complete!"
 echo "  • Venv:          $VENV_DIR"
 echo "  • SAM2 repo:     $SAM2_REPO_DIR"
 echo "  • Checkpoints:   $CHECKPOINT_DIR"
-echo
-echo "Tip: point your load_sam2_local() / build_sam2_video_predictor() to:"
-echo "     checkpoint = \"$CHECKPOINT_DIR/sam2_hiera_base_plus.pt\""
-echo "     model_cfg  = \"sam2_hiera_b+.yaml\"  (from the SAM2 repo configs)"
