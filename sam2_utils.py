@@ -53,7 +53,7 @@ def load_sam2_local(predictor_type="image", model_size="base", mask_threshold=0.
         max_sprinkle_area: Remove disconnected regions smaller than this area (0 = no removal)
     """
     # Point to the sam2_repo location
-    root = Path(__file__).parent.parent / "sam2_repo"
+    root = Path(__file__).parent / "sam2_repo"
     sam2_path = root / "sam2"
     
     # Add sam2 directory to Python path
