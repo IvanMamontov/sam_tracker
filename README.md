@@ -69,10 +69,11 @@ wget \
 
 To use curl instead of wget, for example:
 ```bash
-curl -X POST \
-  -F "video=@sample.mp4" \
+curl -L \
   -o masks.zip \
-  http://localhost:8000/track
+  -X POST \
+  -F "video=@/path/to/input.mp4" \
+  "http://localhost:8000/track?frame_idx=80&points=1618,1010&points=1657,1012&points=1580,999"
   ```
 
 For python clients:
@@ -81,21 +82,20 @@ For python clients:
 import requests
 
 url = "http://localhost:8000/track"
-video_path = "sample.mp4"
-output_zip = "masks.zip"
+params = [
+    ("frame_idx", 80),
+    ("points", "1618,1010"),
+    ("points", "1657,1012"),
+    ("points", "1580,999"),
+]
 
-with open(video_path, "rb") as f:
-    response = requests.post(
-        url,
-        data=f,
-        headers={"Content-Type": "application/octet-stream"},
-        timeout=600,
-    )
+with open("/path/to/input.mp4", "rb") as f:
+    files = {"video": ("input.mp4", f, "video/mp4")}
+    r = requests.post(url, params=params, files=files, timeout=600)
+    r.raise_for_status()
 
-response.raise_for_status()
+with open("masks.zip", "wb") as out:
+    out.write(r.content)
 
-with open(output_zip, "wb") as out:
-    out.write(response.content)
-
-print(f"Saved masks ZIP to {output_zip}")
+print("Saved masks.zip")
 ```
