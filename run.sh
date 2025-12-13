@@ -8,7 +8,7 @@ echo "== Starting Gunicorn App =="
 # ------------------------------
 APP_MODULE=${APP_MODULE:-"sam2_endpoint:app"}     # Example: FastAPI/Flask app object
 HOST=${HOST:-"0.0.0.0"}
-PORT=${PORT:-8000}
+PORT=${PORT:-8082}
 WORKERS=${WORKERS:-4}
 LOG_LEVEL=${LOG_LEVEL:-"info"}
 

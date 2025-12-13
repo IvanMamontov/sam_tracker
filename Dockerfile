@@ -1,29 +1,33 @@
-FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
+FROM --platform=linux/amd64 runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+# Set environment variables
+# This ensures Python output is immediately visible in logs
+ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y \
-    python3 python3-venv python3-pip git ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN python3 -m venv /venv
-ENV PATH="/venv/bin:${PATH}"
-
+# Set the working directory
 WORKDIR /app
 
-# Copy your code
-COPY server/ ./server/
-COPY requirements.txt .
+# Install system dependencies if needed
+RUN apt-get update --yes && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+        wget \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install fastapi uvicorn[standard]
+# Copy requirements file
+COPY requirements.txt /app/
 
-# If SAM2 needs weights, download them here or mount via volume
-# RUN python -m server.sam2_local.download_weights  # example
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8000
+# Copy application files
+COPY . /app
 
-CMD ["uvicorn", "server.sam2_endpoint:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY run.sh /app/run.sh
+COPY setup.sh /app/setup.sh
+RUN chmod +x /app/setup.sh
+RUN /app/setup.sh
+RUN chmod +x /app/run.sh
+ENTRYPOINT []
+CMD ["/app/run.sh"]
